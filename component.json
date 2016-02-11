@@ -1,6 +1,6 @@
 {
   "name": "analytics.js-integration-interstate-analytics",
-  "repo": "segment-integrations/analytics.js-integration-interstate-analytics",
+  "repo": "quintgrowth/analytics.js-integration-interstate-analytics",
   "description": "The Interstate Analytics analytics.js integration.",
   "version": "1.0.4",
   "license": "MIT",
