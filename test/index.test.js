@@ -10,7 +10,7 @@ describe('Interstate Analytics', function() {
   var analytics;
   var interstate;
   var options = {
-    siteId: 'abccbaabccbaabccbaabccbaabccbaabccbaabcd'
+    apiKey: 'abccbaabccbaabccbaabccbaabccbaabccbaabcd'
   };
 
   beforeEach(function() {
@@ -31,7 +31,7 @@ describe('Interstate Analytics', function() {
   it('should have the right settings', function() {
     analytics.compare(Interstate, integration('Interstate Analytics')
       .global('interstate')
-      .option('siteId', ''));
+      .option('apiKey', ''));
   });
 
   describe('before loading', function() {
@@ -84,7 +84,7 @@ describe('Interstate Analytics', function() {
         it('should send visit just after initialize', function() {
           var log = window.interstate.getLogHistory()[0];
           analytics.assert(log.metadata.event_name === 'visit');
-          analytics.assert(log.metadata.project_key === options.siteId);
+          analytics.assert(log.metadata.project_key === options.apiKey);
           analytics.assert(log.metadata.version_date === '2015-06-09');
         });
 
@@ -95,7 +95,7 @@ describe('Interstate Analytics', function() {
 
           var visitLog = logs[0];
           analytics.assert(visitLog.metadata.event_name === 'visit');
-          analytics.assert(visitLog.metadata.project_key === options.siteId);
+          analytics.assert(visitLog.metadata.project_key === options.apiKey);
           analytics.assert(visitLog.metadata.version_date === '2015-06-09');
 
           var aliasLog = logs[1];
@@ -113,7 +113,7 @@ describe('Interstate Analytics', function() {
 
           var visitLog = logs[0];
           analytics.assert(visitLog.metadata.event_name === 'visit');
-          analytics.assert(visitLog.metadata.project_key === options.siteId);
+          analytics.assert(visitLog.metadata.project_key === options.apiKey);
           analytics.assert(visitLog.metadata.version_date === '2015-06-09');
         });
       });
@@ -143,7 +143,7 @@ describe('Interstate Analytics', function() {
 
           var visitLog = logs[0];
           analytics.assert(visitLog.metadata.event_name === 'visit');
-          analytics.assert(visitLog.metadata.project_key === options.siteId);
+          analytics.assert(visitLog.metadata.project_key === options.apiKey);
           analytics.assert(visitLog.metadata.version_date === '2015-06-09');
 
           var conversionLog = logs[1];
@@ -163,7 +163,7 @@ describe('Interstate Analytics', function() {
 
           var visitLog = logs[0];
           analytics.assert(visitLog.metadata.event_name === 'visit');
-          analytics.assert(visitLog.metadata.project_key === options.siteId);
+          analytics.assert(visitLog.metadata.project_key === options.apiKey);
           analytics.assert(visitLog.metadata.version_date === '2015-06-09');
 
           var conversionLog = logs[1];
