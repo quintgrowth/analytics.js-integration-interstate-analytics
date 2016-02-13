@@ -70,13 +70,25 @@ describe('Interstate Analytics', function() {
         beforeEach(function() {
           analytics.stub(window.interstate, 'alias');
         });
-        it('should send an alias', function() {
+        it('should send email as an alias', function() {
           analytics.identify('somemail@interstateanalytics.com');
           analytics.called(window.interstate.alias, 'somemail@interstateanalytics.com');
         });
         it('should not send to stub if there is no userId()', function() {
           analytics.identify({ trait: true });
           analytics.didNotCall(window.interstate.alias);
+        });
+        it('should send email from trait as an alias', function() {
+          analytics.identify('abc123', { email: 'exceptional@interstateanalytics.com' });
+          analytics.called(window.interstate.alias, 'exceptional@interstateanalytics.com');
+        });
+        it('should send email from userId even though there is another email in trait', function() {
+          analytics.identify('first@interstateanalytics.com', { email: 'exceptional@interstateanalytics.com' });
+          analytics.called(window.interstate.alias, 'first@interstateanalytics.com');
+        });
+        it('should fallback to userId if there is no email in trait', function() {
+          analytics.identify('abc123', { name: 'xyz123' });
+          analytics.called(window.interstate.alias, 'abc123');
         });
       });
 
@@ -88,7 +100,7 @@ describe('Interstate Analytics', function() {
           analytics.assert(log.metadata.version_date === '2015-06-09');
         });
 
-        it('should send an alias', function() {
+        it('should send email as an alias', function() {
           analytics.identify('somemail@interstateanalytics.com');
           var logs = window.interstate.getLogHistory();
           analytics.assert(logs.length === 2);
@@ -101,6 +113,24 @@ describe('Interstate Analytics', function() {
           var aliasLog = logs[1];
           analytics.assert(aliasLog.metadata.event_name === 'alias_user');
           analytics.assert(aliasLog.metadata.aliased_name === 'somemail@interstateanalytics.com');
+          analytics.assert(aliasLog.metadata.version_date === '2015-06-09');
+
+          analytics.assert(visitLog.metadata.user_identifier === aliasLog.metadata.user_identifier);
+        });
+
+        it('should send email from trait as an alias', function() {
+          analytics.identify('abc123', { email: 'exceptional@interstateanalytics.com' });
+          var logs = window.interstate.getLogHistory();
+          analytics.assert(logs.length === 2);
+
+          var visitLog = logs[0];
+          analytics.assert(visitLog.metadata.event_name === 'visit');
+          analytics.assert(visitLog.metadata.project_key === options.apiKey);
+          analytics.assert(visitLog.metadata.version_date === '2015-06-09');
+
+          var aliasLog = logs[1];
+          analytics.assert(aliasLog.metadata.event_name === 'alias_user');
+          analytics.assert(aliasLog.metadata.aliased_name === 'exceptional@interstateanalytics.com');
           analytics.assert(aliasLog.metadata.version_date === '2015-06-09');
 
           analytics.assert(visitLog.metadata.user_identifier === aliasLog.metadata.user_identifier);
