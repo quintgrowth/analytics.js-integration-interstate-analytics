@@ -1,4 +1,4 @@
-# analytics.js-integration-interstate-analytics [![Build Status]]
+# analytics.js-integration-interstate-analytics [![Build Status][ci-badge]][ci-link]
 
 Interstate Analytics integration for [Analytics.js][].
 
