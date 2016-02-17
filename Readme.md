@@ -1,4 +1,4 @@
-# analytics.js-integration-interstate-analytics [![Build Status][ci-badge]][ci-link]
+# analytics.js-integration-interstate-analytics [![Circle CI](https://circleci.com/gh/quintgrowth/analytics.js-integration-interstate-analytics/tree/master.svg?style=svg)](https://circleci.com/gh/quintgrowth/analytics.js-integration-interstate-analytics/tree/master)
 
 Interstate Analytics integration for [Analytics.js][].
 
