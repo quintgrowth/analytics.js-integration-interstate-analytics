@@ -1,9 +1,9 @@
 'use strict';
 
-var Analytics = require('analytics.js-core').constructor;
-var integration = require('analytics.js-integration');
-var sandbox = require('clear-env');
-var tester = require('analytics.js-integration-tester');
+var Analytics = require('@segment/analytics.js-core').constructor;
+var integration = require('@segment/analytics.js-integration');
+var sandbox = require('@segment/clear-env');
+var tester = require('@segment/analytics.js-integration-tester');
 var Interstate = require('../lib/');
 
 describe('Interstate Analytics', function() {
@@ -91,62 +91,6 @@ describe('Interstate Analytics', function() {
           analytics.called(window.interstate.alias, 'abc123');
         });
       });
-
-      describe('deep logic test', function() {
-        it('should send visit just after initialize', function() {
-          var log = window.interstate.getLogHistory()[0];
-          analytics.assert(log.metadata.event_name === 'visit');
-          analytics.assert(log.metadata.project_key === options.apiKey);
-          analytics.assert(log.metadata.version_date === '2015-06-09');
-        });
-
-        it('should send email as an alias', function() {
-          analytics.identify('somemail@interstateanalytics.com');
-          var logs = window.interstate.getLogHistory();
-          analytics.assert(logs.length === 2);
-
-          var visitLog = logs[0];
-          analytics.assert(visitLog.metadata.event_name === 'visit');
-          analytics.assert(visitLog.metadata.project_key === options.apiKey);
-          analytics.assert(visitLog.metadata.version_date === '2015-06-09');
-
-          var aliasLog = logs[1];
-          analytics.assert(aliasLog.metadata.event_name === 'alias_user');
-          analytics.assert(aliasLog.metadata.aliased_name === 'somemail@interstateanalytics.com');
-          analytics.assert(aliasLog.metadata.version_date === '2015-06-09');
-
-          analytics.assert(visitLog.metadata.user_identifier === aliasLog.metadata.user_identifier);
-        });
-
-        it('should send email from trait as an alias', function() {
-          analytics.identify('abc123', { email: 'exceptional@interstateanalytics.com' });
-          var logs = window.interstate.getLogHistory();
-          analytics.assert(logs.length === 2);
-
-          var visitLog = logs[0];
-          analytics.assert(visitLog.metadata.event_name === 'visit');
-          analytics.assert(visitLog.metadata.project_key === options.apiKey);
-          analytics.assert(visitLog.metadata.version_date === '2015-06-09');
-
-          var aliasLog = logs[1];
-          analytics.assert(aliasLog.metadata.event_name === 'alias_user');
-          analytics.assert(aliasLog.metadata.aliased_name === 'exceptional@interstateanalytics.com');
-          analytics.assert(aliasLog.metadata.version_date === '2015-06-09');
-
-          analytics.assert(visitLog.metadata.user_identifier === aliasLog.metadata.user_identifier);
-        });
-
-        it('should not send if there is no userId()', function() {
-          analytics.identify({ trait: true });
-          var logs = window.interstate.getLogHistory();
-          analytics.assert(logs.length === 1);
-
-          var visitLog = logs[0];
-          analytics.assert(visitLog.metadata.event_name === 'visit');
-          analytics.assert(visitLog.metadata.project_key === options.apiKey);
-          analytics.assert(visitLog.metadata.version_date === '2015-06-09');
-        });
-      });
     });
 
     describe('#track', function() {
@@ -161,49 +105,6 @@ describe('Interstate Analytics', function() {
         it('should send a purchase conversion with properties to stub', function() {
           analytics.track('purchase', { revenue: 31.95, order_number: 'abc123' });
           analytics.called(window.interstate.track, 'purchase', { revenue: 31.95, order_number: 'abc123' });
-        });
-      });
-
-      describe('deep logic test', function() {
-        it('should send a signup conversion', function() {
-          analytics.track('signup');
-
-          var logs = window.interstate.getLogHistory();
-          analytics.assert(logs.length === 2);
-
-          var visitLog = logs[0];
-          analytics.assert(visitLog.metadata.event_name === 'visit');
-          analytics.assert(visitLog.metadata.project_key === options.apiKey);
-          analytics.assert(visitLog.metadata.version_date === '2015-06-09');
-
-          var conversionLog = logs[1];
-          analytics.assert(conversionLog.metadata.event_name === 'conversion');
-          analytics.assert(conversionLog.metadata.conversion_name === 'signup');
-          analytics.assert(conversionLog.metadata.version_date === '2015-06-09');
-          analytics.assert(!conversionLog.metadata.order_number);
-          analytics.assert(!conversionLog.metadata.price);
-
-          analytics.assert(visitLog.metadata.user_identifier === conversionLog.metadata.user_identifier);
-        });
-
-        it('should send a purchase conversion with properties', function() {
-          analytics.track('purchase', { revenue: 31.95, order_number: 'abc123' });
-          var logs = window.interstate.getLogHistory();
-          analytics.assert(logs.length === 2);
-
-          var visitLog = logs[0];
-          analytics.assert(visitLog.metadata.event_name === 'visit');
-          analytics.assert(visitLog.metadata.project_key === options.apiKey);
-          analytics.assert(visitLog.metadata.version_date === '2015-06-09');
-
-          var conversionLog = logs[1];
-          analytics.assert(conversionLog.metadata.event_name === 'conversion');
-          analytics.assert(conversionLog.metadata.conversion_name === 'purchase');
-          analytics.assert(conversionLog.metadata.version_date === '2015-06-09');
-          analytics.assert(conversionLog.metadata.order_number === 'abc123');
-          analytics.assert(conversionLog.metadata.price === 31.95);
-
-          analytics.assert(visitLog.metadata.user_identifier === conversionLog.metadata.user_identifier);
         });
       });
     });
